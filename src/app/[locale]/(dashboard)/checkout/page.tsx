@@ -22,7 +22,7 @@ export default function CheckoutPage() {
     const { items, removeItem, updateQuantity, totalPoints, clearCart } = useCart();
 
     const [loading, setLoading] = useState(false);
-    const [stores, setStores] = useState<{ id: string, name: string }[]>([]);
+    const [stores, setStores] = useState<{ id: string, name: string, location?: string }[]>([]);
     const [formData, setFormData] = useState({
         name: '',
         mobile: '',
@@ -42,7 +42,8 @@ export default function CheckoutPage() {
                 const querySnapshot = await getDocs(q);
                 const data = querySnapshot.docs.map(doc => ({
                     id: doc.id,
-                    name: doc.data().name
+                    name: doc.data().name,
+                    location: doc.data().location
                 }));
                 if (data) setStores(data);
             } catch (err) {
@@ -87,7 +88,7 @@ export default function CheckoutPage() {
                     user_id: user.id,
                     reward_id: item.id,
                     reward_name: item.name,
-                    reward_image_url: item.image || null,
+                    reward_image_url: item.image_url || null,
                     reward_description: item.description || '',
                     store_id: formData.shopId,
                     store_name: store?.name || '',

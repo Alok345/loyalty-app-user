@@ -3,17 +3,19 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type CartItem = {
-    id: number;
+    id: string;
     name: string;
     cost: number;
     quantity: number;
+    image_url?: string;
+    description?: string;
 };
 
 type CartContextType = {
     items: CartItem[];
     addItem: (item: Omit<CartItem, 'quantity'>) => void;
-    removeItem: (id: number) => void;
-    updateQuantity: (id: number, delta: number) => void;
+    removeItem: (id: string) => void;
+    updateQuantity: (id: string, delta: number) => void;
     clearCart: () => void;
     totalPoints: number;
     totalItems: number;
@@ -49,11 +51,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         });
     };
 
-    const removeItem = (id: number) => {
+    const removeItem = (id: string) => {
         setItems(prev => prev.filter(i => i.id !== id));
     };
 
-    const updateQuantity = (id: number, delta: number) => {
+    const updateQuantity = (id: string, delta: number) => {
         setItems(prev => {
             return prev.map(item => {
                 if (item.id === id) {

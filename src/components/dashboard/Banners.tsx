@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { db } from "@/lib/firebase";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, QueryDocumentSnapshot } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 
 type Banner = {
