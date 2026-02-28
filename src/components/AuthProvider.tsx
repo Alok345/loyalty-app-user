@@ -37,7 +37,8 @@ export type Profile = {
     avatar_url?: string | null;
     points_balance: number;
     role: string;
-    is_active?: boolean;
+    status?: boolean;
+    status_reason?: string | null;
     auth_token?: string | null;
 };
 
@@ -145,9 +146,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const checkUserExists = async (phone: string) => {
         const formattedPhone = phone.startsWith('+') ? phone : `+91${phone}`;
-        const q = query(collection(db, "profiles"), where("mobile", "==", formattedPhone));
+        const q = query(collection(db, "profiles"), where("phone", "==", formattedPhone));
         const querySnapshot = await getDocs(q);
-        return !querySnapshot.empty;
+        if (!querySnapshot.empty) return true;
+
+        // Fallback to "mobile" field just in case
+        const q2 = query(collection(db, "profiles"), where("mobile", "==", formattedPhone));
+        const querySnapshot2 = await getDocs(q2);
+        return !querySnapshot2.empty;
     };
 
     const verifyPhone = async (phone: string, metadata?: Record<string, unknown>) => {
@@ -222,7 +228,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 aadhar: details.aadhar,
                 occupation: details.occupation,
                 role: 'customer',
-                is_active: false,
+                status: false,
                 points_balance: 0
             };
 
@@ -253,7 +259,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
             const profileData = await fetchProfile(firebaseUser.uid);
 
-            if (!profileData || profileData.is_active === false) {
+            if (!profileData || profileData.status === false) {
                 await signOut(auth);
                 return {
                     error: {
@@ -266,6 +272,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
             return { error: null };
         } catch (err: any) {
+            console.error("Login error:", err);
             return { error: { message: "Invalid credentials or user not found.", code: err.code } };
         }
     };
@@ -309,7 +316,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
             const profileData = await fetchProfile(firebaseUser.uid);
 
-            if (!profileData || profileData.is_active === false) {
+            if (!profileData || profileData.status === false) {
                 await signOut(auth);
                 return {
                     error: {

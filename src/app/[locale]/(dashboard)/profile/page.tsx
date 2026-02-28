@@ -177,8 +177,8 @@ export default function ProfilePage() {
                             <div className="space-y-1">
                                 <Label className="text-muted-foreground">{t('status')}</Label>
                                 <div>
-                                    <Badge className={profile.is_active ? "bg-green-500 hover:bg-green-600" : "bg-red-500 hover:bg-red-600"}>
-                                        {profile.is_active ? t('active') : t('inactive')}
+                                    <Badge className={profile.status ? "bg-green-500 hover:bg-green-600" : "bg-red-500 hover:bg-red-600"}>
+                                        {profile.status ? t('active') : t('inactive')}
                                     </Badge>
                                 </div>
                             </div>
