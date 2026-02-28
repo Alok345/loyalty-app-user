@@ -1,0 +1,17 @@
+{
+    "name": "Shubh Nirman",
+    "short_name": "Shubh Nirman",
+    "description": "Auspicious Loyalty App",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#002b5b",
+    "icons": [
+        {
+            "src": "/icon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}
