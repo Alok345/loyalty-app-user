@@ -12,7 +12,9 @@ import {
     RecaptchaVerifier,
     ConfirmationResult,
     updatePassword,
-    createUserWithEmailAndPassword
+    createUserWithEmailAndPassword,
+    linkWithCredential,
+    EmailAuthProvider
 } from "firebase/auth";
 import { doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs } from "firebase/firestore";
 
@@ -238,7 +240,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             // and maybe set a password via updatePassword if they are recently signed in
             if (password) {
                 try {
-                    await updatePassword(firebaseUser, password);
+                    const credential = EmailAuthProvider.credential(phoneEmail, password);
+                    await linkWithCredential(firebaseUser, credential);
                 } catch (pErr) {
                     console.warn("Could not set password immediately:", pErr);
                 }
