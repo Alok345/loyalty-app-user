@@ -16,7 +16,7 @@ import {
     linkWithCredential,
     EmailAuthProvider
 } from "firebase/auth";
-import { doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs, limit } from "firebase/firestore";
 
 // Simple mapping to keep existing usage of user.id
 export type User = {
@@ -148,12 +148,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const checkUserExists = async (phone: string) => {
         const formattedPhone = phone.startsWith('+') ? phone : `+91${phone}`;
-        const q = query(collection(db, "profiles"), where("phone", "==", formattedPhone));
+        const q = query(collection(db, "profiles"), where("phone", "==", formattedPhone), limit(1));
         const querySnapshot = await getDocs(q);
         if (!querySnapshot.empty) return true;
 
         // Fallback to "mobile" field just in case
-        const q2 = query(collection(db, "profiles"), where("mobile", "==", formattedPhone));
+        const q2 = query(collection(db, "profiles"), where("mobile", "==", formattedPhone), limit(1));
         const querySnapshot2 = await getDocs(q2);
         return !querySnapshot2.empty;
     };
